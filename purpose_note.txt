@@ -1,0 +1,24 @@
+This is a To-Do List mobile application built using Flutter and GetX.
+
+The main purpose of the app is to help users manage their daily tasks in a 
+simple and organized way.
+
+Users can:
+
+Add new tasks with title, date, time, and priority
+View all tasks in a clean list
+Mark tasks as completed
+Delete tasks when they are no longer needed
+Search tasks quickly
+
+The app also shows:
+
+Total number of tasks
+Completed tasks
+Pending tasks
+
+All data is stored locally using SharedPreferences, so the tasks are 
+saved even after closing the app.
+
+The design is simple, clean, and user-friendly, making it easy for anyone 
+to use.
