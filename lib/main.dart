@@ -6,6 +6,5 @@ Future<void> main() async {
   //! Local Storage Initialize
   WidgetsFlutterBinding.ensureInitialized();
   await LocalServiceStorage.instance.init();
-
   runApp(App());
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
+import 'package:flutter_todo_list_app/widgets/bottom_navigation_bar_widget.dart';
+import 'package:flutter_todo_list_app/widgets/floating_action_button_widget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
 
@@ -8,30 +10,58 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar,
-      body: SingleChildScrollView(
-        child: GestureDetector(
+    return Obx(() {
+      final views = [
+        SingleChildScrollView(child: _buildBody),
+        SizedBox.expand(child: Center(child: Text('Completed Tasks'))),
+        SizedBox.expand(child: Center(child: Text('User Profile'))),
+      ];
+      final currentIndex = controller.getCurrentIndex;
+      final currentView = views[currentIndex];
+      return Scaffold(
+        appBar: currentIndex == 0 ? _buildAppBar : null,
+        body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: _buildBody,
+          child: currentView,
         ),
-      ),
-    );
+        floatingActionButton: currentIndex == 0
+            ? FloatingActionButtonWidget()
+            : null,
+        bottomNavigationBar: BottomNavigationBarWidget(),
+      );
+    });
   }
 
   //! Build Appbar
   AppBar get _buildAppBar {
     return AppBar(
+      backgroundColor: controller.isDarkMode.value
+          ? AppTheme.darkBg
+          : AppTheme.lightBg,
       actions: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications_none, size: 28),
-          ),
+        Row(
+          children: [
+            Obx(
+              () => IconButton(
+                onPressed: () {
+                  controller.toggleTheme();
+                },
+                icon: Icon(
+                  controller.isDarkMode.value
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                  size: 28,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.notifications, size: 28),
+            ),
+          ],
         ),
       ],
       title: Padding(
@@ -82,7 +112,11 @@ class HomeView extends GetView<HomeController> {
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
-              backgroundColor: WidgetStatePropertyAll(AppTheme.lightCard),
+              backgroundColor: WidgetStatePropertyAll(
+                controller.isDarkMode.value
+                    ? AppTheme.darkCard
+                    : AppTheme.lightCard,
+              ),
             ),
           ),
         ),
@@ -134,9 +168,16 @@ class HomeView extends GetView<HomeController> {
                   height: 110,
                   margin: EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
-                    color: AppTheme.lightCard,
+                    color: controller.isDarkMode.value
+                        ? AppTheme.darkCard
+                        : AppTheme.lightCard,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey[300]!, width: 1.5),
+                    border: Border.all(
+                      color: controller.isDarkMode.value
+                          ? Colors.grey[700]!
+                          : Colors.grey[300]!,
+                      width: 1.5,
+                    ),
                   ),
                   child: Align(
                     alignment: Alignment.center,
@@ -195,6 +236,8 @@ class HomeView extends GetView<HomeController> {
           SizedBox(
             height: Get.height * 0.6,
             child: ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemCount: priority.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -231,8 +274,12 @@ class HomeView extends GetView<HomeController> {
                   ),
                 );
               },
-              separatorBuilder: (context, index) =>
-                  Divider(thickness: 1.5, color: Colors.grey[300]!),
+              separatorBuilder: (context, index) => Divider(
+                thickness: 1.5,
+                color: controller.isDarkMode.value
+                    ? Colors.grey[700]!
+                    : Colors.grey[300]!,
+              ),
             ),
           ),
         ],

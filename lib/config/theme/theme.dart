@@ -14,10 +14,10 @@ class AppTheme {
   static const Color dangerColor = Color(0xFFFF4D4F);
 
   static const Color lightBg = Color(0xFFF7F8FC);
-  static const Color darkBg = Color(0xFF101828);
+  static const Color darkBg = Color.fromARGB(255, 14, 18, 26);
 
   static const Color lightCard = Colors.white;
-  static const Color darkCard = Color(0xFF1D2939);
+  static const Color darkCard = Color.fromARGB(255, 25, 28, 32);
 
   static const Color lightText = Color(0xFF1F2937);
   static const Color darkText = Color(0xFFF9FAFB);

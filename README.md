@@ -1,10 +1,10 @@
-# � Flutter To-Do List App
+# Flutter To-Do List App
 
 A simple and clean **To-Do List mobile application** built using **Flutter** and **GetX**.
 
 ---
 
-## � Overview
+## Overview
 
 This app helps users manage their daily tasks in a simple, organized, and efficient way.  
 It focuses on ease of use with a clean UI and smooth user experience.
@@ -19,24 +19,24 @@ It focuses on ease of use with a clean UI and smooth user experience.
   - Time
   - Priority
 
-- � View all tasks in a clean list
+- View all tasks in a clean list
 - ✅ Mark tasks as completed
-- �️ Delete tasks when no longer needed
-- � Search tasks quickly
+- ️ Delete tasks when no longer needed
+- Search tasks quickly
 
 ---
 
-## � Task Statistics
+## Task Statistics
 
 The app provides useful insights:
 
-- � Total number of tasks
+- Total number of tasks
 - ✅ Completed tasks
 - ⏳ Pending tasks
 
 ---
 
-## � Data Storage
+## Data Storage
 
 All data is stored locally using **SharedPreferences**, which means:
 
@@ -45,7 +45,7 @@ All data is stored locally using **SharedPreferences**, which means:
 
 ---
 
-## � UI Design
+## UI Design
 
 - Simple and clean interface
 - User-friendly layout
@@ -53,7 +53,7 @@ All data is stored locally using **SharedPreferences**, which means:
 
 ---
 
-## �️ Tech Stack
+## Tech Stack
 
 - **Flutter** – UI framework
 - **GetX** – State management & navigation
