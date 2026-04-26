@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-enum RouteView { home }
+enum RouteView { splash, home }
 
 extension AppPages on RouteView {
   // Use: RouteView.home.go()

@@ -76,7 +76,7 @@ class HomeView extends GetView<HomeController> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(
-                  'User👋',
+                  'Flutter👋',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ],
