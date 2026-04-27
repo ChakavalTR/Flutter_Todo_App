@@ -11,7 +11,7 @@ class BottomNavigationBarWidget extends GetView<HomeController> {
     return Obx(() {
       final currentIndex = controller.getCurrentIndex;
       return SizedBox(
-        height: 95,
+        height: 93,
         child: BottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (index) {

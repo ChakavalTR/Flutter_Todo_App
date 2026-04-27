@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/core/services/local_service.dart';
@@ -8,6 +10,9 @@ class HomeController extends GetxController {
   var currentIndex = 0.obs;
   var isDarkMode = false.obs;
   var isCheckBoxList = <bool>[].obs;
+  String? saved = LocalServiceStorage.instance.getString('task_checked');
+  Timer? timer;
+  var greeting = ''.obs;
 
   List<String> categories = ['All Tasks', 'Completed', 'Pending'];
   List<Color> categoryColors = [
@@ -15,7 +20,6 @@ class HomeController extends GetxController {
     Colors.green,
     Colors.orange,
   ];
-  List<String> categoryNumbers = ['12', '5', '7'];
   List<String> tasks = [
     'Design login screen',
     'Fix bugs in dashboard',
@@ -47,7 +51,23 @@ class HomeController extends GetxController {
     isDarkMode.value =
         LocalServiceStorage.instance.getBool('dark_mode') ??
         false; //* Load Theme Data from Local Storage
-    isCheckBoxList.value = List.generate(tasks.length, (index) => false);
+
+    if (saved != null && saved!.isNotEmpty) {
+      //* Load Checkbox State from Local Storage
+      final loaded = saved?.split(',').map((e) => e == 'true').toList();
+      isCheckBoxList.value = List.generate(tasks.length, (index) {
+        return (loaded != null && index < loaded.length)
+            ? loaded[index]
+            : false;
+      });
+    } else {
+      isCheckBoxList.value = List.generate(tasks.length, (index) => false);
+    }
+
+    greeting.value = greetingDisplay;
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      greeting.value = greetingDisplay;
+    });
   }
 
   //! BottomNavigationBar Route
@@ -68,5 +88,66 @@ class HomeController extends GetxController {
     isDarkMode.value =
         LocalServiceStorage.instance.getBool('dark_mode') ?? false;
     Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  //! Edit Task
+  void editTask(int index, String title, String time, String priorityLevel) {
+    if (index < 0 || index >= tasks.length) {
+      return; //*Safety check to prevent out-of-range errors
+    }
+    tasks[index] = title;
+    taskTimes[index] = time;
+    priority[index] = priorityLevel;
+    update();
+  }
+
+  //! Delete Task
+  void deleteTask(int index) {
+    if (index < 0 || index >= tasks.length) {
+      return; //*Safety check to prevent out-of-range errors
+    }
+    tasks.removeAt(index);
+    if (index < taskTimes.length) {
+      taskTimes.removeAt(index);
+    }
+    if (index < priority.length) {
+      priority.removeAt(index);
+    }
+    if (index < priorityColors.length) {
+      priorityColors.removeAt(index);
+    }
+    if (index < isCheckBoxList.length) {
+      isCheckBoxList.removeAt(index);
+    }
+    LocalServiceStorage.instance.setString(
+      'task_checked',
+      isCheckBoxList.join(','),
+    );
+    update();
+  }
+
+  //! Completed Task
+  List<int> get completedTasks {
+    List<int> result = [];
+    for (int i = 0; i < isCheckBoxList.length; i++) {
+      if (isCheckBoxList[i]) {
+        result.add(i);
+      }
+    }
+    return result;
+  }
+
+  //! DateTime Display
+  String get greetingDisplay {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning 🌅';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good Afternoon ☀️';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Good Evening 🌇';
+    } else {
+      return 'Good Night 🌙';
+    }
   }
 }
