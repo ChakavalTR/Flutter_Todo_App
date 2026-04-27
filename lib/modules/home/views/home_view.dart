@@ -126,42 +126,13 @@ class HomeView extends GetView<HomeController> {
 
   //! Build body
   Widget get _buildBody {
-    List<String> categories = ['All Tasks', 'Completed', 'Pending'];
-    List<Color> categoryColors = [
-      AppTheme.primaryColor,
-      Colors.green,
-      Colors.orange,
-    ];
-    List<String> categoryNumbers = ['12', '5', '7'];
-    List<String> tasks = [
-      'Design login screen',
-      'Fix bugs in dashboard',
-      'Write unit tests',
-      'Update user profile',
-      'Plan next sprint',
-    ];
-    List<String> taskTimes = [
-      'Today, 10:00 AM',
-      'Today, 2:00 PM',
-      'Tomorrow, 9:00 AM',
-      'Tomorrow, 1:00 PM',
-      'Next Monday, 11:00 AM',
-    ];
-    List<String> priority = ['High', 'Low', 'High', 'Medium', 'Low'];
-    List<Color> priorityColors = [
-      AppTheme.warningColor,
-      AppTheme.successColor,
-      AppTheme.warningColor,
-      AppTheme.primaryColor,
-      AppTheme.successColor,
-    ];
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: List.generate(categories.length, (index) {
+            children: List.generate(controller.categories.length, (index) {
               return Expanded(
                 child: Container(
                   width: 115,
@@ -186,19 +157,19 @@ class HomeView extends GetView<HomeController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          categories[index],
+                          controller.categories[index],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: categoryColors[index],
+                            color: controller.categoryColors[index],
                           ),
                         ),
                         Text(
-                          categoryNumbers[index],
+                          controller.categoryNumbers[index],
                           style: TextStyle(
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
-                            color: categoryColors[index],
+                            color: controller.categoryColors[index],
                           ),
                         ),
                       ],
@@ -238,36 +209,43 @@ class HomeView extends GetView<HomeController> {
             child: ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: priority.length,
+              itemCount: controller.priority.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Transform.scale(
                     scale: 1.5,
-                    child: Checkbox(value: false, onChanged: (value) {}),
+                    child: Obx(() {
+                      return Checkbox(
+                        value: controller.isCheckBoxList[index],
+                        onChanged: (value) {
+                          controller.isCheckBoxList[index] = value!;
+                        },
+                      );
+                    }),
                   ),
                   title: Text(
-                    tasks[index],
+                    controller.tasks[index],
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    taskTimes[index],
+                    controller.taskTimes[index],
                     style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                   trailing: Container(
                     width: 70,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: priorityColors[index].withOpacity(0.2),
+                      color: controller.priorityColors[index].withOpacity(0.2),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Center(
                       child: Text(
-                        priority[index],
+                        controller.priority[index],
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: priorityColors[index],
+                          color: controller.priorityColors[index],
                         ),
                       ),
                     ),
