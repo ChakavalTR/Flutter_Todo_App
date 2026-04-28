@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/core/services/local_service.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
 import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
