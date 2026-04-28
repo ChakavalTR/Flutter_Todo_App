@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_list_app/config/routes/app_route.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
-import 'package:flutter_todo_list_app/modules/home/views/home_view.dart';
 import 'package:get/get.dart';
 
 class EditView extends StatefulWidget {
@@ -98,7 +96,8 @@ class _EditViewState extends State<EditView> {
   Widget build(BuildContext context) {
     final dateText = formatDate(selectedDate);
     final timeText = selectedTime.format(context);
-
+    final taskDates = controller.taskDates[widget.index];
+    final taskTimes = controller.taskTimes[widget.index].split(', ')[1];
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -113,7 +112,7 @@ class _EditViewState extends State<EditView> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
@@ -141,7 +140,6 @@ class _EditViewState extends State<EditView> {
                   ),
                 ),
               ),
-
               SizedBox(height: 15),
               Text(
                 'Date',
@@ -172,7 +170,7 @@ class _EditViewState extends State<EditView> {
                                 : Colors.grey[600],
                           ),
                           SizedBox(width: 8),
-                          Text(dateText, style: TextStyle(fontSize: 16)),
+                          Text(taskDates, style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
@@ -209,7 +207,7 @@ class _EditViewState extends State<EditView> {
                                 : Colors.grey[600],
                           ),
                           SizedBox(width: 8),
-                          Text(timeText, style: TextStyle(fontSize: 16)),
+                          Text(taskTimes, style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),

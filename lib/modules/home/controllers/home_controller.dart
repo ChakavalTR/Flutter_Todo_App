@@ -46,7 +46,7 @@ class HomeController extends GetxController {
     'April 15, 2024',
     'June 16, 2024',
     'September 16, 2024',
-    'November 17, 2024',
+    'November 29, 2024',
   ];
   List<String> taskStatus = [
     'Pending',

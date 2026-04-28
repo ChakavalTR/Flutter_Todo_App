@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/core/services/local_service.dart';
+import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/complete_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/edit_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/profile_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/task_detail_view.dart';
+import 'package:flutter_todo_list_app/modules/home/views/view_all_view.dart';
 import 'package:flutter_todo_list_app/widgets/bottom_navigation_bar_widget.dart';
-import 'package:flutter_todo_list_app/widgets/confirm_delete_dialog_widet.dart';
+import 'package:flutter_todo_list_app/widgets/confirm_delete_dialog_wigdet.dart';
 import 'package:flutter_todo_list_app/widgets/floating_action_button_widget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
@@ -39,7 +41,11 @@ class HomeView extends GetView<HomeController> {
           child: currentView,
         ),
         floatingActionButton: currentIndex == 0
-            ? FloatingActionButtonWidget()
+            ? FloatingActionButtonWidget(
+                onPressed: () {
+                  Get.to(() => AddTaskView());
+                },
+              )
             : null,
         bottomNavigationBar: BottomNavigationBarWidget(),
       );
@@ -146,16 +152,11 @@ class HomeView extends GetView<HomeController> {
                     height: 110,
                     margin: EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      color: controller.isDarkMode.value
-                          ? AppTheme.darkCard
-                          : AppTheme.lightCard,
+                      // color: controller.isDarkMode.value
+                      //     ? AppTheme.darkCard
+                      //     : AppTheme.lightCard,
+                      color: controller.categoryColors[index].withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: controller.isDarkMode.value
-                            ? Colors.grey[700]!
-                            : Colors.grey[300]!,
-                        width: 1.5,
-                      ),
                     ),
                     child: Align(
                       alignment: Alignment.center,
@@ -205,12 +206,16 @@ class HomeView extends GetView<HomeController> {
               child: Row(
                 children: [
                   Text(
-                    'Today\'s Tasks',
+                    controller.taskDates.isNotEmpty
+                        ? 'Today\'s Tasks'
+                        : 'No tasks available',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => ViewAllView());
+                    },
                     child: Text(
                       'View All',
                       style: TextStyle(
@@ -226,6 +231,19 @@ class HomeView extends GetView<HomeController> {
             SizedBox(height: 10),
             GetBuilder<HomeController>(
               builder: (controller) {
+                if (controller.taskDates.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No tasks available',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: controller.isDarkMode.value
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  );
+                }
                 return Column(
                   children: List.generate(controller.tasks.length, (index) {
                     if (index >= controller.isCheckBoxList.length) {

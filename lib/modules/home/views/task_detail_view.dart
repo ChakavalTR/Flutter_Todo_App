@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
 import 'package:flutter_todo_list_app/modules/home/views/edit_view.dart';
-import 'package:flutter_todo_list_app/widgets/confirm_delete_dialog_widet.dart';
+import 'package:flutter_todo_list_app/widgets/confirm_delete_dialog_wigdet.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 
@@ -97,7 +97,9 @@ class TaskDetailView extends GetView<HomeController> {
                 style: TextStyle(
                   fontSize: 16.5,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: controller.isDarkMode.value
+                      ? Colors.white
+                      : Colors.black,
                 ),
               ),
             ),
