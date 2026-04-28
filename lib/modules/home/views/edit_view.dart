@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_list_app/config/routes/app_route.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
+import 'package:flutter_todo_list_app/modules/home/views/home_view.dart';
 import 'package:get/get.dart';
 
 class EditView extends StatefulWidget {
@@ -267,9 +269,10 @@ class _EditViewState extends State<EditView> {
                     selectedPriority,
                   );
                   Get.back();
+                  Get.back();
                   controller.update();
                   Get.snackbar(
-                    'Edited Text',
+                    'Sucess',
                     'The task has been successfully edited.',
                     snackPosition: SnackPosition.BOTTOM,
                     margin: EdgeInsets.all(14),

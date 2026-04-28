@@ -27,12 +27,33 @@ class HomeController extends GetxController {
     'Update user profile',
     'Plan next sprint',
   ];
+  List<String> taskDescriptions = [
+    'Create a modern and user-friendly login screen for the app.',
+    'Resolve the reported bugs in the dashboard to improve performance.',
+    'Write comprehensive unit tests for the new features added.',
+    'Allow users to update their profile information and preferences.',
+    'Organize and plan tasks for the next development sprint.',
+  ];
   List<String> taskTimes = [
     'Today, 10:00 AM',
     'Today, 2:00 PM',
     'Tomorrow, 9:00 AM',
     'Tomorrow, 1:00 PM',
     'Next Monday, 11:00 AM',
+  ];
+  List<String> taskDates = [
+    'May 21, 2024',
+    'April 15, 2024',
+    'June 16, 2024',
+    'September 16, 2024',
+    'November 17, 2024',
+  ];
+  List<String> taskStatus = [
+    'Pending',
+    'Completed',
+    'Pending',
+    'Pending',
+    'Completed',
   ];
   List<String> priority = ['High', 'Low', 'High', 'Medium', 'Low'];
   List<Color> priorityColors = [
@@ -42,7 +63,7 @@ class HomeController extends GetxController {
     AppTheme.primaryColor,
     AppTheme.successColor,
   ];
-  //!------------------------------------------
+  //!------------------------------------------------------------------------------------
 
   //! OnInit Method
   @override
@@ -62,6 +83,14 @@ class HomeController extends GetxController {
       });
     } else {
       isCheckBoxList.value = List.generate(tasks.length, (index) => false);
+    }
+
+    //! OnClose Method
+    @override
+    // ignore: unused_element
+    void onClose() {
+      timer?.cancel();
+      super.onClose();
     }
 
     greeting.value = greetingDisplay;
@@ -149,5 +178,18 @@ class HomeController extends GetxController {
     } else {
       return 'Good Night 🌙';
     }
+  }
+
+  //! Mark as Done Task
+  void markAsDone(int index) {
+    if (index < 0 || index >= isCheckBoxList.length) {
+      return; //*Safety check to prevent out-of-range errors
+    }
+    isCheckBoxList[index] = true;
+    LocalServiceStorage.instance.setString(
+      'task_checked',
+      isCheckBoxList.join(','),
+    );
+    update();
   }
 }
