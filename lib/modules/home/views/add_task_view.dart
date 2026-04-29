@@ -100,223 +100,228 @@ class _AddTaskViewState extends State<AddTaskView> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Task Title',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                TextFormField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter task title',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    labelStyle: TextStyle(color: Colors.grey[600]),
-                    border: OutlineInputBorder(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Task Title',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a task title';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 25),
-                Text(
-                  'Description (optional)',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter description',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    labelStyle: TextStyle(color: Colors.grey[600]),
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter task title',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      labelStyle: TextStyle(color: Colors.grey[600]),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a task title';
+                      }
                       return null;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Date',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                GestureDetector(
-                  onTap: selecteDate,
-                  child: Container(
-                    width: Get.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: controller.isDarkMode.value
-                          ? Colors.black.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.8),
-                      border: Border.all(color: Colors.grey, width: 0.3),
-                      borderRadius: BorderRadius.circular(15),
+                    },
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    'Description (optional)',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter description',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      labelStyle: TextStyle(color: Colors.grey[600]),
+                      border: OutlineInputBorder(),
                     ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today_rounded,
-                              color: controller.isDarkMode.value
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              dateText,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: controller.isDarkMode.value
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return null;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Date',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: selecteDate,
+                    child: Container(
+                      width: Get.width,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: controller.isDarkMode.value
+                            ? Colors.black.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.8),
+                        border: Border.all(color: Colors.grey, width: 0.3),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Time',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                GestureDetector(
-                  onTap: selecteTime,
-                  child: Container(
-                    width: Get.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: controller.isDarkMode.value
-                          ? Colors.black.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.8),
-                      border: Border.all(color: Colors.grey, width: 0.3),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.schedule_rounded,
-                              color: controller.isDarkMode.value
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              timeText,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: controller.isDarkMode.value
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Priority',
-                  style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  height: 55,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: controller.isDarkMode.value
-                        ? Colors.black.withOpacity(0.5)
-                        : Colors.white.withOpacity(0.8),
-                    border: Border.all(color: Colors.grey, width: 0.3),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedPriority,
-                      items: priorityLists.map((priority) {
-                        return DropdownMenuItem<String>(
-                          value: priority,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Row(
                             children: [
                               Icon(
-                                Icons.flag_outlined,
-                                size: 25,
-                                color: getPriorityColor(priority),
+                                Icons.calendar_today_rounded,
+                                color: controller.isDarkMode.value
+                                    ? Colors.white
+                                    : Colors.grey[600],
                               ),
                               SizedBox(width: 8),
-                              Text(priority, style: TextStyle(fontSize: 16)),
+                              Text(
+                                dateText,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: controller.isDarkMode.value
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
                             ],
                           ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedPriority = value!;
-                        });
-                      },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      final newTask = HomeModel(
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        date: dateText,
-                        time: timeText,
-                        status: 'Pending',
-                        priority: selectedPriority,
-                        isDone: false,
-                      );
-                      controller.addTask(newTask);
-                      Get.back();
-                      Future.delayed(Duration(milliseconds: 100), () {
-                        Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          margin: EdgeInsets.all(14),
-                          'Task Added',
-                          'Your task has been successfully added.',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                        );
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.successColor,
+                  SizedBox(height: 15),
+                  Text(
+                    'Time',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  child: Text('Save Task'),
-                ),
-              ],
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: selecteTime,
+                    child: Container(
+                      width: Get.width,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: controller.isDarkMode.value
+                            ? Colors.black.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.8),
+                        border: Border.all(color: Colors.grey, width: 0.3),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.schedule_rounded,
+                                color: controller.isDarkMode.value
+                                    ? Colors.white
+                                    : Colors.grey[600],
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                timeText,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: controller.isDarkMode.value
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Priority',
+                    style: TextStyle(
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    height: 55,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: controller.isDarkMode.value
+                          ? Colors.black.withOpacity(0.5)
+                          : Colors.white.withOpacity(0.8),
+                      border: Border.all(color: Colors.grey, width: 0.3),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedPriority,
+                        items: priorityLists.map((priority) {
+                          return DropdownMenuItem<String>(
+                            value: priority,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.flag_outlined,
+                                  size: 25,
+                                  color: getPriorityColor(priority),
+                                ),
+                                SizedBox(width: 8),
+                                Text(priority, style: TextStyle(fontSize: 16)),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPriority = value!;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        final newTask = HomeModel(
+                          title: titleController.text,
+                          description: descriptionController.text,
+                          date: dateText,
+                          time: timeText,
+                          status: 'Pending',
+                          priority: selectedPriority,
+                          isDone: false,
+                        );
+                        controller.addTask(newTask);
+                        Get.back();
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          Get.snackbar(
+                            snackPosition: SnackPosition.BOTTOM,
+                            margin: EdgeInsets.all(14),
+                            'Task Added',
+                            'Your task has been successfully added.',
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.successColor,
+                    ),
+                    child: Text('Save Task'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
