@@ -1,4 +1,4 @@
-# Flutter To-Do List App
+# Flutter To-Do App
 
 A simple and clean To-Do List mobile application built using Flutter and GetX.
 
