@@ -374,11 +374,14 @@ class HomeView extends GetView<HomeController> {
                               ),
                             ),
                           ),
-                          Divider(
-                            thickness: 1.5,
-                            color: controller.isDarkMode.value
-                                ? Colors.grey[700]!
-                                : Colors.grey[300]!,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12, right: 12),
+                            child: Divider(
+                              thickness: 1.5,
+                              color: controller.isDarkMode.value
+                                  ? Colors.grey[700]!
+                                  : Colors.grey[300]!,
+                            ),
                           ),
                         ],
                       ),

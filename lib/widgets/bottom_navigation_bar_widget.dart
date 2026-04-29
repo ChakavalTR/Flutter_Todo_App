@@ -41,12 +41,6 @@ class BottomNavigationBarWidget extends GetView<HomeController> {
                   : Icon(Icons.check_circle_outline, size: 30),
               label: 'Completed',
             ),
-            BottomNavigationBarItem(
-              icon: currentIndex == 2
-                  ? Icon(Icons.person, size: 30)
-                  : Icon(Icons.person_outline, size: 30),
-              label: 'Profile',
-            ),
           ],
         ),
       );

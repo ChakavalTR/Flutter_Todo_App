@@ -285,9 +285,9 @@ class _EditViewState extends State<EditView> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.successColor,
+                  backgroundColor: AppTheme.primaryColor,
                 ),
-                child: Text('Save Edit Task'),
+                child: Text('Save Edit'),
               ),
             ],
           ),

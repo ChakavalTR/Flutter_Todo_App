@@ -38,53 +38,66 @@ class CompleteView extends GetView<HomeController> {
               final priorityColor = controller.getPriorityColors(
                 task.priority ?? '',
               );
-              return ListTile(
-                leading: Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 30,
-                ),
-                title: Text(
-                  task.title.toString(),
-                  style: TextStyle(
-                    color: controller.isDarkMode.value
-                        ? Colors.white
-                        : Colors.black,
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: controller.isDarkMode.value
-                        ? Colors.white
-                        // ignore: deprecated_member_use
-                        : Colors.black.withOpacity(0.6),
-                  ),
-                ),
-                subtitle: Text(
-                  '${task.date}, ${task.time}',
-                  style: TextStyle(
-                    color: controller.isDarkMode.value
-                        // ignore: deprecated_member_use
-                        ? Colors.grey.withOpacity(0.6)
-                        : Colors.grey[500],
-                  ),
-                ),
-                trailing: Container(
-                  width: 70,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    // ignore: deprecated_member_use
-                    color: priorityColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Text(
-                      task.priority.toString(),
+              return Column(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 30,
+                    ),
+                    title: Text(
+                      task.title.toString(),
                       style: TextStyle(
-                        color: priorityColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        color: controller.isDarkMode.value
+                            ? Colors.white
+                            : Colors.black,
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: controller.isDarkMode.value
+                            ? Colors.white
+                            // ignore: deprecated_member_use
+                            : Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    subtitle: Text(
+                      '${task.date}, ${task.time}',
+                      style: TextStyle(
+                        color: controller.isDarkMode.value
+                            // ignore: deprecated_member_use
+                            ? Colors.grey.withOpacity(0.6)
+                            : Colors.grey[500],
+                      ),
+                    ),
+                    trailing: Container(
+                      width: 70,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        // ignore: deprecated_member_use
+                        color: priorityColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: Text(
+                          task.priority.toString(),
+                          style: TextStyle(
+                            color: priorityColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 26, right: 26),
+                    child: Divider(
+                      thickness: 1.5,
+                      color: controller.isDarkMode.value
+                          ? Colors.grey[700]!
+                          : Colors.grey[300]!,
+                    ),
+                  ),
+                ],
               );
             },
           );

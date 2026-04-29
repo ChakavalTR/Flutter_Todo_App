@@ -316,7 +316,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.successColor,
+                      backgroundColor: AppTheme.primaryColor,
                     ),
                     child: Text('Save Task'),
                   ),
