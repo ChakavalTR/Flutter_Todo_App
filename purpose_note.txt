@@ -5,7 +5,7 @@ simple and organized way.
 
 Users can:
 
-Add new tasks with title, date, time, and priority
+Add new tasks with title, description, date, time, and priority
 View all tasks in a clean list
 Mark tasks as completed
 Delete tasks when they are no longer needed

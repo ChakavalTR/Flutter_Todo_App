@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
+import 'package:flutter_todo_list_app/modules/home/models/home_model.dart';
 import 'package:get/get.dart';
 
 class AddTaskView extends StatefulWidget {
@@ -114,7 +115,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                 TextFormField(
                   controller: titleController,
                   decoration: InputDecoration(
-                    labelText: 'Enter Task Title',
+                    hintText: 'Enter task title',
                     hintStyle: TextStyle(color: Colors.grey),
                     labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(),
@@ -128,20 +129,21 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ),
                 SizedBox(height: 25),
                 Text(
-                  'Description',
+                  'Description (optional)',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
                 TextFormField(
                   controller: descriptionController,
                   decoration: InputDecoration(
-                    labelText: 'Enter description',
+                    hintText: 'Enter description',
+                    hintStyle: TextStyle(color: Colors.grey),
                     labelStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
+                      return null;
                     }
                     return null;
                   },
@@ -284,7 +286,31 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      final newTask = HomeModel(
+                        title: titleController.text,
+                        description: descriptionController.text,
+                        date: dateText,
+                        time: timeText,
+                        status: 'Pending',
+                        priority: selectedPriority,
+                        isDone: false,
+                      );
+                      controller.addTask(newTask);
+                      Get.back();
+                      Future.delayed(Duration(milliseconds: 100), () {
+                        Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          margin: EdgeInsets.all(14),
+                          'Task Added',
+                          'Your task has been successfully added.',
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                        );
+                      });
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.successColor,
                   ),

@@ -29,7 +29,7 @@ class ViewAllView extends GetView<HomeController> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: GetBuilder<HomeController>(
             builder: (controller) {
-              if (controller.taskDates.isEmpty) {
+              if (controller.tasks.isEmpty) {
                 return Center(
                   child: Text(
                     'No tasks available',
@@ -44,9 +44,11 @@ class ViewAllView extends GetView<HomeController> {
               }
               return Column(
                 children: List.generate(controller.tasks.length, (index) {
-                  if (index >= controller.isCheckBoxList.length) {
-                    return const SizedBox.shrink();
-                  }
+                  final task = controller.tasks[index];
+                  final priorityColor = controller.getPriorityColors(
+                    task.priority ?? '',
+                  );
+
                   return GestureDetector(
                     onTap: () {
                       Get.to(() => TaskDetailView(index: index));
@@ -94,28 +96,31 @@ class ViewAllView extends GetView<HomeController> {
                             leading: Transform.scale(
                               scale: 1.5,
                               child: Checkbox(
-                                value: controller.isCheckBoxList[index],
+                                value: task.isDone,
                                 onChanged: (value) {
-                                  controller.isCheckBoxList[index] = value!;
+                                  task.isDone = value!;
                                   LocalServiceStorage.instance.setString(
                                     'task_checked',
-                                    controller.isCheckBoxList.join(','),
+                                    controller.tasks
+                                        .map((e) => e.isDone)
+                                        .toList()
+                                        .toString(),
                                   );
                                   controller.update();
                                 },
                               ),
                             ),
                             title: Text(
-                              controller.tasks[index],
+                              task.title.toString(),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: controller.isCheckBoxList[index]
+                                color: task.isDone
                                     ? Colors.grey.withOpacity(0.6)
                                     : controller.isDarkMode.value
                                     ? Colors.white
                                     : Colors.black,
-                                decoration: controller.isCheckBoxList[index]
+                                decoration: task.isDone
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none,
                                 decorationColor: controller.isDarkMode.value
@@ -124,10 +129,10 @@ class ViewAllView extends GetView<HomeController> {
                               ),
                             ),
                             subtitle: Text(
-                              controller.taskTimes[index],
+                              '${task.date} at ${task.time}',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: controller.isCheckBoxList[index]
+                                color: task.isDone
                                     ? Colors.grey.withOpacity(0.6)
                                     : Colors.grey[500],
                               ),
@@ -136,17 +141,16 @@ class ViewAllView extends GetView<HomeController> {
                               width: 70,
                               height: 30,
                               decoration: BoxDecoration(
-                                color: controller.priorityColors[index]
-                                    .withOpacity(0.2),
+                                color: priorityColor.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Center(
                                 child: Text(
-                                  controller.priority[index],
+                                  task.priority.toString(),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color: controller.priorityColors[index],
+                                    color: priorityColor,
                                   ),
                                 ),
                               ),

@@ -1,18 +1,20 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/core/services/local_service.dart';
+import 'package:flutter_todo_list_app/modules/home/models/home_model.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   //! Declare Variables Here
   var currentIndex = 0.obs;
   var isDarkMode = false.obs;
-  var isCheckBoxList = <bool>[].obs;
-  String? saved = LocalServiceStorage.instance.getString('task_checked');
   Timer? timer;
   var greeting = ''.obs;
+  var tasks = <HomeModel>[].obs;
+  var searchTask = ''.obs;
+  final searchController = TextEditingController();
 
   List<String> categories = ['All Tasks', 'Completed', 'Pending'];
   List<Color> categoryColors = [
@@ -20,49 +22,17 @@ class HomeController extends GetxController {
     Colors.green,
     Colors.orange,
   ];
-  List<String> tasks = [
-    'Design login screen',
-    'Fix bugs in dashboard',
-    'Write unit tests',
-    'Update user profile',
-    'Plan next sprint',
-  ];
-  List<String> taskDescriptions = [
-    'Create a modern and user-friendly login screen for the app.',
-    'Resolve the reported bugs in the dashboard to improve performance.',
-    'Write comprehensive unit tests for the new features added.',
-    'Allow users to update their profile information and preferences.',
-    'Organize and plan tasks for the next development sprint.',
-  ];
-  List<String> taskTimes = [
-    'Today, 10:00 AM',
-    'Today, 2:00 PM',
-    'Tomorrow, 9:00 AM',
-    'Tomorrow, 1:00 PM',
-    'Next Monday, 11:00 AM',
-  ];
-  List<String> taskDates = [
-    'May 21, 2024',
-    'April 15, 2024',
-    'June 16, 2024',
-    'September 16, 2024',
-    'November 29, 2024',
-  ];
-  List<String> taskStatus = [
-    'Pending',
-    'Completed',
-    'Pending',
-    'Pending',
-    'Completed',
-  ];
-  List<String> priority = ['High', 'Low', 'High', 'Medium', 'Low'];
-  List<Color> priorityColors = [
-    AppTheme.warningColor,
-    AppTheme.successColor,
-    AppTheme.warningColor,
-    AppTheme.primaryColor,
-    AppTheme.successColor,
-  ];
+
+  Color getPriorityColors(String priority) {
+    if (priority == 'High') {
+      return AppTheme.warningColor;
+    }
+    if (priority == 'Medium') {
+      return AppTheme.primaryColor;
+    } else {
+      return AppTheme.successColor;
+    }
+  }
   //!------------------------------------------------------------------------------------
 
   //! OnInit Method
@@ -72,31 +42,18 @@ class HomeController extends GetxController {
     isDarkMode.value =
         LocalServiceStorage.instance.getBool('dark_mode') ??
         false; //* Load Theme Data from Local Storage
-
-    if (saved != null && saved!.isNotEmpty) {
-      //* Load Checkbox State from Local Storage
-      final loaded = saved?.split(',').map((e) => e == 'true').toList();
-      isCheckBoxList.value = List.generate(tasks.length, (index) {
-        return (loaded != null && index < loaded.length)
-            ? loaded[index]
-            : false;
-      });
-    } else {
-      isCheckBoxList.value = List.generate(tasks.length, (index) => false);
-    }
-
-    //! OnClose Method
-    @override
-    // ignore: unused_element
-    void onClose() {
-      timer?.cancel();
-      super.onClose();
-    }
-
+    loadTask();
     greeting.value = greetingDisplay;
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       greeting.value = greetingDisplay;
     });
+  }
+
+  //! OnClose Method
+  @override
+  void onClose() {
+    timer?.cancel();
+    super.onClose();
   }
 
   //! BottomNavigationBar Route
@@ -119,14 +76,66 @@ class HomeController extends GetxController {
     Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
   }
 
-  //! Edit Task
-  void editTask(int index, String title, String time, String priorityLevel) {
+  //! Load Tasks from Local Storage
+  void loadTask() {
+    final savedTask = LocalServiceStorage.instance.getString('tasks');
+    if (savedTask != null && savedTask.isNotEmpty) {
+      final decoded = jsonDecode(savedTask) as List<dynamic>;
+      tasks.value = decoded.map((e) => HomeModel.fromJson(e)).toList();
+    }
+  }
+
+  //! Save Task
+  void saveTask() {
+    final encode = jsonEncode(
+      tasks.map((element) => element.toJson()).toList(),
+    );
+    LocalServiceStorage.instance.setString('tasks', encode);
+  }
+
+  //! Completed Task
+  List<HomeModel> get completedTasks =>
+      tasks.where((task) => task.isDone == true).toList();
+
+  List<HomeModel> get pendingTasks =>
+      tasks.where((task) => task.isDone == false).toList();
+
+  //! Mark as Done Task
+  void markAsDone(int index) {
     if (index < 0 || index >= tasks.length) {
       return; //*Safety check to prevent out-of-range errors
     }
-    tasks[index] = title;
-    taskTimes[index] = time;
-    priority[index] = priorityLevel;
+    tasks[index].isDone = !tasks[index].isDone;
+    tasks[index].status = tasks[index].isDone ? 'Completed' : 'Pending';
+    tasks.refresh();
+    saveTask();
+    update();
+  }
+
+  //! Search Task
+  List<HomeModel> get searchResults {
+    if (searchTask.value.isEmpty) return tasks;
+    return tasks.where((task) {
+      return task.title.toString().toLowerCase().contains(
+        searchTask.value.toLowerCase(),
+      );
+    }).toList();
+  }
+
+  //! Add Task
+  void addTask(HomeModel task) {
+    tasks.add(task);
+    saveTask();
+    update();
+  }
+
+  //! Edit Task
+  void editTask(int index, HomeModel updateTask) {
+    if (index < 0 || index >= tasks.length) {
+      return; //*Safety check to prevent out-of-range errors
+    }
+    tasks[index] = updateTask;
+    saveTask();
     update();
   }
 
@@ -136,34 +145,8 @@ class HomeController extends GetxController {
       return; //*Safety check to prevent out-of-range errors
     }
     tasks.removeAt(index);
-    if (index < taskTimes.length) {
-      taskTimes.removeAt(index);
-    }
-    if (index < priority.length) {
-      priority.removeAt(index);
-    }
-    if (index < priorityColors.length) {
-      priorityColors.removeAt(index);
-    }
-    if (index < isCheckBoxList.length) {
-      isCheckBoxList.removeAt(index);
-    }
-    LocalServiceStorage.instance.setString(
-      'task_checked',
-      isCheckBoxList.join(','),
-    );
+    saveTask();
     update();
-  }
-
-  //! Completed Task
-  List<int> get completedTasks {
-    List<int> result = [];
-    for (int i = 0; i < isCheckBoxList.length; i++) {
-      if (isCheckBoxList[i]) {
-        result.add(i);
-      }
-    }
-    return result;
   }
 
   //! DateTime Display
@@ -178,18 +161,5 @@ class HomeController extends GetxController {
     } else {
       return 'Good Night 🌙';
     }
-  }
-
-  //! Mark as Done Task
-  void markAsDone(int index) {
-    if (index < 0 || index >= isCheckBoxList.length) {
-      return; //*Safety check to prevent out-of-range errors
-    }
-    isCheckBoxList[index] = true;
-    LocalServiceStorage.instance.setString(
-      'task_checked',
-      isCheckBoxList.join(','),
-    );
-    update();
   }
 }

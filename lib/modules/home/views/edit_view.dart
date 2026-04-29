@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/controllers/home_controller.dart';
+import 'package:flutter_todo_list_app/modules/home/models/home_model.dart';
 import 'package:get/get.dart';
 
 class EditView extends StatefulWidget {
@@ -13,7 +14,6 @@ class EditView extends StatefulWidget {
 
 class _EditViewState extends State<EditView> {
   final controller = Get.find<HomeController>();
-
   late TextEditingController titleController;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -23,10 +23,9 @@ class _EditViewState extends State<EditView> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(
-      text: controller.tasks[widget.index],
-    );
-    selectedPriority = controller.priority[widget.index];
+    final task = controller.tasks[widget.index];
+    titleController = TextEditingController(text: task.title);
+    selectedPriority = task.priority ?? 'Low';
   }
 
   Future<void> pickDate() async {
@@ -96,8 +95,7 @@ class _EditViewState extends State<EditView> {
   Widget build(BuildContext context) {
     final dateText = formatDate(selectedDate);
     final timeText = selectedTime.format(context);
-    final taskDates = controller.taskDates[widget.index];
-    final taskTimes = controller.taskTimes[widget.index].split(', ')[1];
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -170,7 +168,7 @@ class _EditViewState extends State<EditView> {
                                 : Colors.grey[600],
                           ),
                           SizedBox(width: 8),
-                          Text(taskDates, style: TextStyle(fontSize: 16)),
+                          Text(dateText, style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
@@ -207,7 +205,7 @@ class _EditViewState extends State<EditView> {
                                 : Colors.grey[600],
                           ),
                           SizedBox(width: 8),
-                          Text(taskTimes, style: TextStyle(fontSize: 16)),
+                          Text(timeText, style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
@@ -260,17 +258,25 @@ class _EditViewState extends State<EditView> {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  controller.tasks[widget.index] = titleController.text;
-                  controller.taskTimes[widget.index] = '$dateText • $timeText';
-                  controller.priority[widget.index] = selectedPriority;
-                  controller.priorityColors[widget.index] = getPriorityColor(
-                    selectedPriority,
+                  final oldTask = controller.tasks[widget.index];
+                  controller.editTask(
+                    widget.index,
+                    HomeModel(
+                      title: titleController.text,
+                      date: dateText,
+                      time: timeText,
+                      status: oldTask.isDone
+                          ? 'Completed'
+                          : 'Pending', //* Preserve the status based on isDone
+                      priority: selectedPriority,
+                      isDone: oldTask.isDone, //* Preserve the isDone status
+                    ),
                   );
                   Get.back();
                   Get.back();
                   controller.update();
                   Get.snackbar(
-                    'Sucess',
+                    'Success',
                     'The task has been successfully edited.',
                     snackPosition: SnackPosition.BOTTOM,
                     margin: EdgeInsets.all(14),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
-import 'package:flutter_todo_list_app/core/services/local_service.dart';
 import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/complete_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/edit_view.dart';
@@ -120,6 +119,11 @@ class HomeView extends GetView<HomeController> {
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SearchBar(
+              controller: controller.searchController,
+              onChanged: (value) {
+                controller.searchTask.value = value;
+                controller.update();
+              },
               padding: WidgetStatePropertyAll(
                 EdgeInsets.only(left: 10, right: 20),
               ),
@@ -131,7 +135,22 @@ class HomeView extends GetView<HomeController> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              trailing: [Icon(Icons.search_rounded, color: Colors.grey[400])],
+              trailing: [
+                Obx(() {
+                  return controller.searchTask.value.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            controller.searchController.clear();
+                            controller.searchTask.value = '';
+                            controller.update();
+                          },
+                          icon: Icon(Icons.close),
+                          iconSize: 25,
+                          color: Colors.grey[400],
+                        )
+                      : Icon(Icons.search, color: Colors.grey[400], size: 25);
+                }),
+              ],
               keyboardType: TextInputType.text,
               elevation: WidgetStatePropertyAll(1.5), //* Box Shadow
               shape: WidgetStatePropertyAll(
@@ -178,15 +197,8 @@ class HomeView extends GetView<HomeController> {
                                 ? controller.tasks.length.toString()
                                 : index ==
                                       1 //* Completed Tasks Count
-                                ? controller.isCheckBoxList
-                                      .where((e) => e)
-                                      .length
-                                      .toString()
-                                : controller
-                                      .isCheckBoxList //* Pending Tasks Count
-                                      .where((e) => !e)
-                                      .length
-                                      .toString(),
+                                ? controller.completedTasks.length.toString()
+                                : controller.pendingTasks.length.toString(),
                             style: TextStyle(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
@@ -206,9 +218,11 @@ class HomeView extends GetView<HomeController> {
               child: Row(
                 children: [
                   Text(
-                    controller.taskDates.isNotEmpty
-                        ? 'Today\'s Tasks'
-                        : 'No tasks available',
+                    controller.searchTask.value.isNotEmpty
+                        ? 'Results for "${controller.searchTask.value}"'
+                        : controller.tasks.isEmpty
+                        ? 'No tasks available'
+                        : 'Today\'s Tasks',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
@@ -231,32 +245,41 @@ class HomeView extends GetView<HomeController> {
             SizedBox(height: 10),
             GetBuilder<HomeController>(
               builder: (controller) {
-                if (controller.taskDates.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No tasks available',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: controller.isDarkMode.value
-                            ? Colors.white
-                            : Colors.black,
+                final list = controller.searchResults;
+                if (list.isEmpty) {
+                  return SizedBox(
+                    height: Get.height * 0.5,
+                    child: Center(
+                      child: Text(
+                        controller.searchTask.value.isEmpty
+                            ? 'No tasks available'
+                            : 'No results found for "${controller.searchTask.value}"',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: controller.isDarkMode.value
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                     ),
                   );
                 }
+
                 return Column(
-                  children: List.generate(controller.tasks.length, (index) {
-                    if (index >= controller.isCheckBoxList.length) {
-                      return const SizedBox.shrink();
-                    }
+                  children: List.generate(list.length, (index) {
+                    final task = list[index];
+                    final realIndex = controller.tasks.indexOf(task);
+                    final priorityColor = controller.getPriorityColors(
+                      task.priority ?? '',
+                    );
                     return GestureDetector(
                       onTap: () {
-                        Get.to(() => TaskDetailView(index: index));
+                        Get.to(() => TaskDetailView(index: realIndex));
                       },
                       child: Column(
                         children: [
                           Slidable(
-                            key: ValueKey('${controller.tasks[index]}_$index'),
+                            key: ValueKey('${task.title}_$realIndex'),
                             groupTag: 'task_slidable',
                             closeOnScroll: true,
                             endActionPane: ActionPane(
@@ -265,7 +288,7 @@ class HomeView extends GetView<HomeController> {
                               children: [
                                 SlidableAction(
                                   onPressed: (context) {
-                                    Get.to(() => EditView(index: index));
+                                    Get.to(() => EditView(index: realIndex));
                                   },
                                   backgroundColor: Colors.blue,
                                   foregroundColor: Colors.white,
@@ -278,7 +301,7 @@ class HomeView extends GetView<HomeController> {
                                     Get.dialog(
                                       ConfirmDeleteDialogWidget(
                                         onDelete: () {
-                                          controller.deleteTask(index);
+                                          controller.deleteTask(realIndex);
                                         },
                                       ),
                                     );
@@ -296,28 +319,24 @@ class HomeView extends GetView<HomeController> {
                               leading: Transform.scale(
                                 scale: 1.5,
                                 child: Checkbox(
-                                  value: controller.isCheckBoxList[index],
+                                  value: task.isDone,
                                   onChanged: (value) {
-                                    controller.isCheckBoxList[index] = value!;
-                                    LocalServiceStorage.instance.setString(
-                                      'task_checked',
-                                      controller.isCheckBoxList.join(','),
-                                    );
+                                    controller.markAsDone(realIndex);
                                     controller.update();
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.tasks[index],
+                                task.title ?? '',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  color: controller.isCheckBoxList[index]
+                                  color: task.isDone
                                       ? Colors.grey.withOpacity(0.6)
                                       : controller.isDarkMode.value
                                       ? Colors.white
                                       : Colors.black,
-                                  decoration: controller.isCheckBoxList[index]
+                                  decoration: task.isDone
                                       ? TextDecoration.lineThrough
                                       : TextDecoration.none,
                                   decorationColor: controller.isDarkMode.value
@@ -326,10 +345,10 @@ class HomeView extends GetView<HomeController> {
                                 ),
                               ),
                               subtitle: Text(
-                                controller.taskTimes[index],
+                                '${task.date} at ${task.time}',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: controller.isCheckBoxList[index]
+                                  color: task.isDone
                                       ? Colors.grey.withOpacity(0.6)
                                       : Colors.grey[500],
                                 ),
@@ -338,17 +357,16 @@ class HomeView extends GetView<HomeController> {
                                 width: 70,
                                 height: 30,
                                 decoration: BoxDecoration(
-                                  color: controller.priorityColors[index]
-                                      .withOpacity(0.2),
+                                  color: priorityColor.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Center(
                                   child: Text(
-                                    controller.priority[index],
+                                    task.priority ?? '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: controller.priorityColors[index],
+                                      color: priorityColor,
                                     ),
                                   ),
                                 ),

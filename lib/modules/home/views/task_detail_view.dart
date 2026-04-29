@@ -12,6 +12,8 @@ class TaskDetailView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final task = controller.tasks[index];
+    final priorityColor = controller.getPriorityColors(task.priority ?? '');
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,7 +50,7 @@ class TaskDetailView extends GetView<HomeController> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    controller.tasks[index],
+                    task.title.toString(),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -68,16 +70,14 @@ class TaskDetailView extends GetView<HomeController> {
                         ),
                         decoration: BoxDecoration(
                           // ignore: deprecated_member_use
-                          color: controller.priorityColors[index].withOpacity(
-                            0.2,
-                          ),
+                          color: priorityColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
                           child: Text(
-                            '${controller.priority[index]} Priority',
+                            '${task.priority} Priority',
                             style: TextStyle(
-                              color: controller.priorityColors[index],
+                              color: priorityColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
@@ -104,16 +104,21 @@ class TaskDetailView extends GetView<HomeController> {
               ),
             ),
             SizedBox(height: 10),
-            Text(
-              // ignore: unnecessary_string_interpolations
-              '${controller.taskDescriptions[index]}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: controller.isDarkMode.value
-                    ? Colors.white
-                    : Colors.grey[600],
-              ),
+            Row(
+              children: [
+                Text(
+                  controller.tasks[index].description.toString().isEmpty
+                      ? 'No description provided.'
+                      : controller.tasks[index].description.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: controller.isDarkMode.value
+                        ? Colors.white
+                        : Colors.grey[600],
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             Column(
@@ -121,19 +126,15 @@ class TaskDetailView extends GetView<HomeController> {
                 _info(
                   Icons.calendar_today_rounded,
                   'Date',
-                  controller.taskDates[index],
+                  task.date.toString(),
                 ),
                 SizedBox(height: 15),
-                _info(
-                  Icons.access_time_rounded,
-                  'Time',
-                  controller.taskTimes[index].split(', ')[1],
-                ),
+                _info(Icons.access_time_rounded, 'Time', task.time.toString()),
                 SizedBox(height: 15),
                 _info(
                   Icons.check_box_outlined,
                   'Status',
-                  controller.taskStatus[index],
+                  task.status.toString(),
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -228,8 +229,8 @@ class TaskDetailView extends GetView<HomeController> {
                           Get.dialog(
                             ConfirmDeleteDialogWidget(
                               onDelete: () {
-                                controller.deleteTask(index);
                                 Get.back();
+                                controller.deleteTask(index);
                               },
                             ),
                           );

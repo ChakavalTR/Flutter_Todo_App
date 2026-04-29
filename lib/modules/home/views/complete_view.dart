@@ -35,6 +35,9 @@ class CompleteView extends GetView<HomeController> {
             itemCount: completedTask.length,
             itemBuilder: (context, index) {
               final task = completedTask[index];
+              final priorityColor = controller.getPriorityColors(
+                task.priority ?? '',
+              );
               return ListTile(
                 leading: Icon(
                   Icons.check_circle,
@@ -42,7 +45,7 @@ class CompleteView extends GetView<HomeController> {
                   size: 30,
                 ),
                 title: Text(
-                  controller.tasks[task],
+                  task.title.toString(),
                   style: TextStyle(
                     color: controller.isDarkMode.value
                         ? Colors.white
@@ -55,7 +58,7 @@ class CompleteView extends GetView<HomeController> {
                   ),
                 ),
                 subtitle: Text(
-                  controller.taskTimes[task],
+                  '${task.date}, ${task.time}',
                   style: TextStyle(
                     color: controller.isDarkMode.value
                         // ignore: deprecated_member_use
@@ -68,14 +71,14 @@ class CompleteView extends GetView<HomeController> {
                   height: 30,
                   decoration: BoxDecoration(
                     // ignore: deprecated_member_use
-                    color: controller.priorityColors[task].withOpacity(0.2),
+                    color: priorityColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
                     child: Text(
-                      controller.priority[task],
+                      task.priority.toString(),
                       style: TextStyle(
-                        color: controller.priorityColors[task],
+                        color: priorityColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),

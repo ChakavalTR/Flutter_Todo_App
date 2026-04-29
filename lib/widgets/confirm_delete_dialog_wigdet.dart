@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class ConfirmDeleteDialogWidget extends StatelessWidget {
   final VoidCallback onDelete;
@@ -50,14 +51,6 @@ class ConfirmDeleteDialogWidget extends StatelessWidget {
                     onPressed: () {
                       Get.back();
                       onDelete();
-                      Get.snackbar(
-                        snackPosition: SnackPosition.BOTTOM,
-                        margin: EdgeInsets.all(14),
-                        'Task Deleted',
-                        'The task has been successfully deleted.',
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white,
-                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
