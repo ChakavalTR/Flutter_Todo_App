@@ -47,6 +47,7 @@ class HomeView extends GetView<HomeController> {
                 },
               )
             : null,
+        // bottomNavigationBar: BottomNavigationBarWidget(),
         bottomNavigationBar: BottomNavigationBarWidget(),
       );
     });
