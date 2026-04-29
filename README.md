@@ -1,6 +1,6 @@
 # Flutter To-Do List App
 
-A simple and clean **To-Do List mobile application** built using **Flutter** and **GetX**.
+A simple and clean To-Do List mobile application built using Flutter and GetX.
 
 ---
 
@@ -11,17 +11,17 @@ It focuses on ease of use with a clean UI and smooth user experience.
 
 ---
 
-## ✨ Features
+## Features
 
-- ➕ Add new tasks with:
+- Add new tasks with:
   - Title
   - Date
   - Time
   - Priority
 
 - View all tasks in a clean list
-- ✅ Mark tasks as completed
-- ️ Delete tasks when no longer needed
+- Mark tasks as completed
+- Delete tasks when no longer needed
 - Search tasks quickly
 
 ---
@@ -31,14 +31,14 @@ It focuses on ease of use with a clean UI and smooth user experience.
 The app provides useful insights:
 
 - Total number of tasks
-- ✅ Completed tasks
-- ⏳ Pending tasks
+- Completed tasks
+- Pending tasks
 
 ---
 
 ## Data Storage
 
-All data is stored locally using **SharedPreferences**, which means:
+All data is stored locally using SharedPreferences:
 
 - Tasks are saved even after closing the app
 - No internet connection required
@@ -49,14 +49,27 @@ All data is stored locally using **SharedPreferences**, which means:
 
 - Simple and clean interface
 - User-friendly layout
-- Easy navigation using **GetX**
+- Easy navigation using GetX
 
 ---
 
 ## Tech Stack
 
-- **Flutter** – UI framework
-- **GetX** – State management & navigation
-- **SharedPreferences** – Local storage
+- Flutter – UI framework
+- GetX – State management and navigation
+- SharedPreferences – Local storage
 
 ---
+
+## Future Improvements
+
+- Dark mode enhancement
+- Task analytics dashboard
+- Reminder notifications
+- Cloud sync
+
+---
+
+## Author
+
+- TR.Chakaval
