@@ -1,10 +1,12 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_todo_list_app/config/routes/app_route.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/complete_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/edit_view.dart';
+import 'package:flutter_todo_list_app/modules/home/views/notification_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/profile_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/task_detail_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/view_all_view.dart';
@@ -76,7 +78,9 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                RouteView.notification.go();
+              },
               icon: Icon(Icons.notifications, size: 28),
             ),
           ],
@@ -224,7 +228,7 @@ class HomeView extends GetView<HomeController> {
                         ? 'Results for "${controller.searchTask.value}"'
                         : controller.tasks.isEmpty
                         ? 'No tasks available'
-                        : 'Today\'s Tasks',
+                        : 'Tasks available',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
