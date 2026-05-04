@@ -47,7 +47,7 @@ class HomeView extends GetView<HomeController> {
                 },
               )
             : null,
-        // bottomNavigationBar: BottomNavigationBarWidget(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBarWidget(),
       );
     });
