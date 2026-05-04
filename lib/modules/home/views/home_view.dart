@@ -6,7 +6,6 @@ import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/complete_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/edit_view.dart';
-import 'package:flutter_todo_list_app/modules/home/views/notification_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/profile_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/task_detail_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/view_all_view.dart';
