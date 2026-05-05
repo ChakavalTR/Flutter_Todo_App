@@ -1,4 +1,5 @@
 import 'package:flutter_todo_list_app/config/routes/app_route.dart';
+import 'package:flutter_todo_list_app/modules/home/bindings/home_binding.dart';
 import 'package:flutter_todo_list_app/modules/home/views/home_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/notification_view.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -17,7 +18,8 @@ class AppRouting {
         return GetPage(
           name: "/notification",
           page: () => NotificationView(),
-          transition: Transition.rightToLeft,
+          binding: HomeBinding(),
+          transition: Transition.native,
         );
     }
   }).toList();

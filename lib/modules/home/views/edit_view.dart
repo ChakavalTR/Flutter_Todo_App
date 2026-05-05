@@ -23,7 +23,7 @@ class _EditViewState extends State<EditView> {
   @override
   void initState() {
     super.initState();
-    final task = controller.tasks[widget.index];
+    final task = controller.homes[widget.index];
     titleController = TextEditingController(text: task.title);
     selectedPriority = task.priority ?? 'Low';
   }
@@ -258,7 +258,7 @@ class _EditViewState extends State<EditView> {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  final oldTask = controller.tasks[widget.index];
+                  final oldTask = controller.homes[widget.index];
                   controller.editTask(
                     widget.index,
                     HomeModel(

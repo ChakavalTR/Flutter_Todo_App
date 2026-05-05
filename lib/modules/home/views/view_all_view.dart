@@ -29,7 +29,7 @@ class ViewAllView extends GetView<HomeController> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: GetBuilder<HomeController>(
             builder: (controller) {
-              if (controller.tasks.isEmpty) {
+              if (controller.homes.isEmpty) {
                 return Center(
                   child: Text(
                     'No tasks available',
@@ -43,8 +43,8 @@ class ViewAllView extends GetView<HomeController> {
                 );
               }
               return Column(
-                children: List.generate(controller.tasks.length, (index) {
-                  final task = controller.tasks[index];
+                children: List.generate(controller.homes.length, (index) {
+                  final task = controller.homes[index];
                   final priorityColor = controller.getPriorityColors(
                     task.priority ?? '',
                   );
@@ -56,7 +56,7 @@ class ViewAllView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         Slidable(
-                          key: ValueKey('${controller.tasks[index]}_$index'),
+                          key: ValueKey('${controller.homes[index]}_$index'),
                           groupTag: 'task_slidable',
                           closeOnScroll: true,
                           endActionPane: ActionPane(
@@ -101,7 +101,7 @@ class ViewAllView extends GetView<HomeController> {
                                   task.isDone = value!;
                                   LocalServiceStorage.instance.setString(
                                     'task_checked',
-                                    controller.tasks
+                                    controller.homes
                                         .map((e) => e.isDone)
                                         .toList()
                                         .toString(),

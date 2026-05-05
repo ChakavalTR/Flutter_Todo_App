@@ -199,7 +199,7 @@ class HomeView extends GetView<HomeController> {
                           Text(
                             index ==
                                     0 //* Total Tasks Count
-                                ? controller.tasks.length.toString()
+                                ? controller.homes.length.toString()
                                 : index ==
                                       1 //* Completed Tasks Count
                                 ? controller.completedTasks.length.toString()
@@ -225,7 +225,7 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     controller.searchTask.value.isNotEmpty
                         ? 'Results for "${controller.searchTask.value}"'
-                        : controller.tasks.isEmpty
+                        : controller.homes.isEmpty
                         ? 'No tasks available'
                         : 'Tasks available',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -269,11 +269,10 @@ class HomeView extends GetView<HomeController> {
                     ),
                   );
                 }
-
                 return Column(
                   children: List.generate(list.length, (index) {
                     final task = list[index];
-                    final realIndex = controller.tasks.indexOf(task);
+                    final realIndex = controller.homes.indexOf(task);
                     final priorityColor = controller.getPriorityColors(
                       task.priority ?? '',
                     );

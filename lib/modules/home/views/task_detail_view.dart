@@ -12,7 +12,7 @@ class TaskDetailView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final task = controller.tasks[index];
+    final task = controller.homes[index];
     final priorityColor = controller.getPriorityColors(task.priority ?? '');
     return Scaffold(
       appBar: AppBar(
@@ -107,9 +107,9 @@ class TaskDetailView extends GetView<HomeController> {
             Row(
               children: [
                 Text(
-                  controller.tasks[index].description.toString().isEmpty
+                  controller.homes[index].description.toString().isEmpty
                       ? 'No description provided.'
-                      : controller.tasks[index].description.toString(),
+                      : controller.homes[index].description.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
