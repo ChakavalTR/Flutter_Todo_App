@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_todo_list_app/config/routes/app_page.dart';
-import 'package:flutter_todo_list_app/config/routes/app_route.dart';
 import 'package:flutter_todo_list_app/config/theme/theme.dart';
 import 'package:flutter_todo_list_app/modules/home/views/add_task_view.dart';
 import 'package:flutter_todo_list_app/modules/home/views/complete_view.dart';
